@@ -2,8 +2,10 @@ import pandas as pd
 import sqlite3
 import sys
 import os
+from datetime import datetime
+from funcs import is_date
 
-
+pd.options.mode.chained_assignment = None
 # main_wb = pd.read_excel('excel/Лимиты полигонов.xlsm')
 
 new_df = pd.DataFrame()
@@ -68,4 +70,22 @@ for file in files_to_open:
     landfills_of_object = df_object.iloc[:, landfill_title_column]
     weights_1_object = df_object.iloc[:, weight_object_title_column]
     weights_2_object = df_object.iloc[:, weight_landfill_title_column]
+
+
+    # print(file, dates_of_object[0])
+    for i, e in enumerate(dates_of_object, start=0):
+        if is_date(e):
+            dates_of_object[i] = pd.to_datetime(e, format='%d.%m.%Y')
+    # print(file, dates_of_object[0])
+
+    min_file_date = min(dates_of_object)
+    max_file_date = max(dates_of_object)
+
+    # здесь If minFileDate = 0 Or maxFileDate = 0 Then
+    last_date_table = max_file_date if file_index == 1 else None
+    # здесь If maxFileDate > Date Then
+    if max_file_date > last_date_table:
+        last_date_table = max_file_date
+
+
 
